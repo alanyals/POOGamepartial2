@@ -118,6 +118,15 @@ class PongGame:
             self.__wn.update()  # Actualiza la pantalla.
             self.__pelota.move()  # Mueve la pelota.
             self.__check_collision()  # Verifica las colisiones.
+            if self.__marcadorA == 3 or self.__marcadorB == 3:
+                self.__game_over()
+                break
+
+    def __game_over(self):
+        # Muestra "Fin del juego" en el centro de la pantalla.
+        self.__pen.clear()
+        self.__pen.goto(0, 0)
+        self.__pen.write("Fin del juego", align="center", font=("Courier", 25, "normal"))
 
 if __name__ == "__main__":
     # Ejecuta el juego.
