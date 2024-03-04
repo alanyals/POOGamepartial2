@@ -1,7 +1,7 @@
 import turtle
 
 class Paddle:
-    def __init__(self, x, y):
+    def __init__(self, x, y, name):
         # Inicializa la paleta con la posición (x, y) especificada.
         self.__x = x  # Coordenada x de la paleta (privada).
         self.__y = y  # Coordenada y de la paleta (privada).
@@ -14,7 +14,7 @@ class Paddle:
         self.__paddle.shapesize(stretch_wid=5, stretch_len=1)  # Tamaño de la paleta.
         self.__paddle.penup()  # Levanta el lápiz para evitar que se dibuje la línea.
         self.__paddle.goto(self.__x, self.__y)  # Posiciona la paleta en las coordenadas especificadas.
-
+        self.__name = name [:5] #limita el nombre personalizado a 5 caracteres.
     def move_up(self):
         # Método para mover la paleta hacia arriba.
         self.__y += self.__speed if self.__y + self.__speed <= 290 else 0  # Limita el movimiento para no salir de la pantalla.
@@ -28,6 +28,11 @@ class Paddle:
     def get_position(self):
         # Método para obtener la posición actual de la paleta.
         return self.__x, self.__y
+
+    def get_name (self): #metodo para obtener el nombre del jugador.
+        return self.__name
+
+
 
 class Ball:
     def __init__(self):
@@ -62,8 +67,10 @@ class PongGame:
         self.__wn.bgcolor("black")  # Color de fondo de la ventana.
         self.__wn.setup(width=800, height=600)  # Tamaño de la ventana.
         self.__wn.tracer(0)  # Desactiva las actualizaciones automáticas.
-        self.__jugadorA = Paddle(-350, 0)  # Crea la paleta del jugador A.
-        self.__jugadorB = Paddle(350, 0)   # Crea la paleta del jugador B.
+        jugadorA_nombre = input("Nombre del jugador A (maximo 5 caracteres): [:5]")
+        jugadorB_nombre = input("Nombre del jugador A (maximo 5 caracteres): [:5]")
+        self.__jugadorA = Paddle(-350, 0, jugadorA_nombre)  # Crea la paleta del jugador A con nombre personalizado.
+        self.__jugadorB = Paddle(350, 0,jugadorB_nombre)   # Crea la paleta del jugador B con nombre personalizado.
         self.__pelota = Ball()  # Crea la pelota.
         self.__pen = turtle.Turtle()  # Crea un objeto Turtle para dibujar el marcador.
         self.__setup_pen()  # Configura el objeto Turtle para el marcador.
