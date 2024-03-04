@@ -62,6 +62,7 @@ class PongGame:
         # Inicializa el juego Pong.
         self.__marcadorA = 0  # Puntuación del jugador A.
         self.__marcadorB = 0  # Puntuación del jugador B.
+        self.__tiempo = 0 #Es la variable en donde se guarda el tiempo
         self.__wn = turtle.Screen()  # Crea una pantalla de Turtle.
         self.__wn.title("Pong by Mundo Python")  # Título de la ventana.
         self.__wn.bgcolor("black")  # Color de fondo de la ventana.
@@ -83,11 +84,12 @@ class PongGame:
         self.__pen.hideturtle()  # Oculta el cursor de Turtle.
         self.__pen.goto(0, 260)  # Posiciona el marcador en la parte superior de la pantalla.
         self.__update_score()  # Actualiza el marcador con la puntuación inicial.
+        self.__cronometro()#Actualiza el metodo del cronometro
 
     def __update_score(self):
         # Actualiza el marcador con la puntuación actual de los jugadores.
         self.__pen.clear()  # Borra el contenido anterior del marcador.
-        self.__pen.write(f"Jugador A: {self.__marcadorA}     Jugador B: {self.__marcadorB}", align="center", font=("Courier", 25, "normal"))  # Escribe la puntuación.
+        self.__pen.write(f"Jugador A: {self.__marcadorA}     Jugador B: {self.__marcadorB}", align="right", font=("Courier", 15, "normal"))  # Escribe la puntuación.
 
     def __check_collision(self):
         # Verifica las colisiones de la pelota con las paletas y los bordes de la pantalla.
@@ -113,6 +115,13 @@ class PongGame:
             self.__marcadorB += 1
             self.__update_score()  # Actualiza el marcador con la nueva puntuación.
 
+    def __cronometro(self):
+        #metodo del cronometro
+        self.__tiempo +=0.1
+        self.__pen.write(f"Cronometro: {self.__tiempo:.1f}", align="left", font=("Courier",15 ,"normal"))
+        self.__wn.ontimer(self.__cronometro,100)
+        
+        
     def play(self):
         # Inicia el juego.
         self.__wn.listen()  # Habilita la escucha de eventos del teclado.
