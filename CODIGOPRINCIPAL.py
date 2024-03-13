@@ -1,72 +1,97 @@
-import turtle
-import time
+import turtle  # Importa el módulo turtle para crear gráficos.
+import time  # Importa el módulo time para manejar el tiempo.
 
-class Paddle:
-    def __init__(self, x, y, name):
+class Paddle:  # Define la clase Paddle.
+    def __init__(self, x, y, name):  # Define el método de inicialización con los argumentos x, y y name.
         # Inicializa la paleta con la posición (x, y) especificada.
-        self.__x = x  # Coordenada x de la paleta (privada).
-        self.__y = y  # Coordenada y de la paleta (privada).
-        self.__height = 100  # Altura de la paleta.
-        self.__width = 10    # Ancho de la paleta.
-        self.__speed = 30    # Velocidad de movimiento de la paleta.
+        self.__x = x  # Define el atributo privado __x como la coordenada x de la paleta.
+        self.__y = y  # Define el atributo privado __y como la coordenada y de la paleta.
+        self.__height = 100  # Define el atributo privado __height como la altura de la paleta.
+        self.__width = 10    # Define el atributo privado __width como el ancho de la paleta.
+        self.__speed = 30    # Define el atributo privado __speed como la velocidad de movimiento de la paleta.
         self.__paddle = turtle.Turtle()  # Crea un objeto Turtle para la paleta.
-        self.__paddle.shape("square")    # Forma de la paleta.
-        self.__paddle.color("white")     # Color de la paleta.
-        self.__paddle.shapesize(stretch_wid=5, stretch_len=1)  # Tamaño de la paleta.
+        self.__paddle.shape("square")    # Define la forma de la paleta como un cuadrado.
+        self.__paddle.color("white")     # Define el color de la paleta como blanco.
+        self.__paddle.shapesize(stretch_wid=5, stretch_len=1)  # Define el tamaño de la paleta.
         self.__paddle.penup()  # Levanta el lápiz para evitar que se dibuje la línea.
         self.__paddle.goto(self.__x, self.__y)  # Posiciona la paleta en las coordenadas especificadas.
         self.__name = self.__get_valid_name(name)  # Limita el nombre personalizado y realiza la validación.
 
-    def move_up(self):
-        # Método para mover la paleta hacia arriba.
-        self.__y += self.__speed if self.__y + self.__speed <= 290 else 0  # Limita el movimiento para no salir de la pantalla.
+    def move_up(self):  # Define el método move_up para mover la paleta hacia arriba.
+        # Mueve la paleta hacia arriba si no supera el límite superior de la pantalla.
+        self.__y += self.__speed if self.__y + self.__speed <= 290 else 0
         self.__paddle.sety(self.__y)  # Actualiza la posición y de la paleta.
 
-    def move_down(self):
-        # Método para mover la paleta hacia abajo.
-        self.__y -= self.__speed if self.__y - self.__speed >= -290 else 0  # Limita el movimiento para no salir de la pantalla.
+    def move_down(self):  # Define el método move_down para mover la paleta hacia abajo.
+        # Mueve la paleta hacia abajo si no supera el límite inferior de la pantalla.
+        self.__y -= self.__speed if self.__y - self.__speed >= -290 else 0
         self.__paddle.sety(self.__y)  # Actualiza la posición y de la paleta.
 
-    def get_position(self):
-        # Método para obtener la posición actual de la paleta.
-        return self.__x, self.__y
+    def get_position(self):  # Define el método get_position para obtener la posición actual de la paleta.
+        return self.__x, self.__y  # Devuelve las coordenadas x e y de la paleta.
 
-    def get_name(self):  # Método para obtener el nombre del jugador.
-        return self.__name
+    def get_name(self):  # Define el método get_name para obtener el nombre del jugador.
+        return self.__name  # Devuelve el nombre del jugador.
 
-    def __get_valid_name(self, name):
-        # Método privado para obtener un nombre válido.
-        while True:
-            if any(char.isdigit() for char in name):
-                print("No se aceptan números en el nombre. Ingrese un nombre válido.")
-            elif len(name) > 5:
-                print("El nombre excede el límite de 5 caracteres. Ingrese un nombre válido.")
-            else:
-                return name
-            name = input("Ingrese el nombre nuevamente (máximo 5 caracteres): ")
+    def __get_valid_name(self, name):  # Define el método privado __get_valid_name para validar el nombre del jugador.
+        while True:  # Bucle infinito para la validación continua del nombre.
+            error_messages = {  # Define un diccionario de mensajes de error para la validación del nombre.
+                any(char.isdigit() for char in name): "No se aceptan números en el nombre. Ingrese un nombre válido.",
+                len(name) > 5: "El nombre excede el límite de 5 caracteres. Ingrese un nombre válido."
+            }
+            error = error_messages.get(True)  # Obtiene el mensaje de error si hay una condición verdadera.
+            if error:  # Si hay un mensaje de error.
+                print(error)  # Imprime el mensaje de error.
+            else:  # Si no hay error.
+                return name  # Devuelve el nombre válido.
+            name = input("Ingrese el nombre nuevamente (máximo 5 caracteres): ")  # Solicita al usuario que ingrese el nombre nuevamente.
 
-class Ball:
+    def __get_unique_characters(self, name):  # Define el método privado __get_unique_characters para obtener un conjunto de caracteres únicos del nombre ingresado.
+        unique_characters = {char for char in name}  # Utiliza una comprensión de conjuntos para obtener caracteres únicos del nombre.
+        return unique_characters  # Devuelve el conjunto de caracteres únicos.
+
+class MoveHorizontal:
     def __init__(self):
+        self.__x = 0
+
+    def moveX(self, value):
+        self.__x += value
+
+    def getX(self):
+        return self.__x
+
+class MoveVertical:
+    def __init__(self):
+        self.__y = 0
+
+    def moveY(self, value):
+        self.__y += value
+
+    def getY(self):
+        return self.__y
+
+class Ball(MoveHorizontal, MoveVertical):
+    def __init__(self):
+        MoveHorizontal.__init__(self)
+        MoveVertical.__init__(self)
         # Inicializa la pelota en el centro de la pantalla.
-        self.__x = 0  # Coordenada x de la pelota (privada).
-        self.__y = 0  # Coordenada y de la pelota (privada).
         self.__speed_x = 1  # Velocidad de la pelota en el eje x.
         self.__speed_y = 1  # Velocidad de la pelota en el eje y.
         self.__ball = turtle.Turtle()  # Crea un objeto Turtle para la pelota.
-        self.__ball.shape("square")    # Forma de la pelota.
-        self.__ball.color("white")     # Color de la pelota.
+        self.__ball.shape("square")    # Define la forma de la pelota.
+        self.__ball.color("white")     # Define el color de la pelota.
         self.__ball.penup()  # Levanta el lápiz para evitar que se dibuje la línea.
-        self.__ball.goto(self.__x, self.__y)  # Posiciona la pelota en el centro de la pantalla.
+        self.__ball.goto(self.getX(), self.getY())  # Posiciona la pelota en el centro de la pantalla.
 
     def move(self):
         # Método para mover la pelota.
-        self.__x += self.__speed_x  # Actualiza la posición x de la pelota.
-        self.__y += self.__speed_y  # Actualiza la posición y de la pelota.
-        self.__ball.goto(self.__x, self.__y)  # Mueve la pelota a la nueva posición.
+        self.moveX(self.__speed_x)  # Mueve la pelota en el eje x.
+        self.moveY(self.__speed_y)  # Mueve la pelota en el eje y.
+        self.__ball.goto(self.getX(), self.getY())  # Mueve la pelota a la nueva posición.
 
     def get_position(self):
         # Método para obtener la posición actual de la pelota.
-        return self.__x, self.__y
+        return self.getX(), self.getY()
 
 class PongGame:
     def __init__(self):
@@ -83,6 +108,7 @@ class PongGame:
         jugadorB_nombre = input("Nombre del jugador B (máximo 5 caracteres): ")
         self.__jugadorA = Paddle(-350, 0, jugadorA_nombre)  # Crea la paleta del jugador A con nombre personalizado.
         self.__jugadorB = Paddle(350, 0, jugadorB_nombre)   # Crea la paleta del jugador B con nombre personalizado.
+        self.__jugadores = [self.__jugadorA, self.__jugadorB]  # Lista de jugadores
         self.__pelota = Ball()  # Crea la pelota.
         self.__pen_score = turtle.Turtle()  # Crea un objeto Turtle para dibujar el marcador.
         self.__pen_timer = turtle.Turtle()  # Crea un objeto Turtle para dibujar el cronómetro.
@@ -108,7 +134,11 @@ class PongGame:
         # Actualiza el marcador con la puntuación actual de los jugadores.
         self.__pen_score.clear()  # Borra el contenido anterior del marcador.
         self.__pen_score.goto(0, 230)  # Posiciona el marcador en la parte superior de la pantalla.
-        self.__pen_score.write(f"{self.__jugadorA.get_name()}: {self.__marcadorA}     {self.__jugadorB.get_name()}: {self.__marcadorB}", align="center", font=("Courier", 15, "normal"))  # Escribe la puntuación.
+        
+        # Utiliza enumerate y comprensión de listas para formatear los nombres y marcadores en una cadena legible.
+        score_text = "     ".join([f"{player.get_name()}: {score}" for player, score in zip(self.__jugadores, [self.__marcadorA, self.__marcadorB])])
+        
+        self.__pen_score.write(score_text, align="center", font=("Courier", 15, "normal"))  # Escribe la puntuación.
 
     def __update_timer(self):
         # Actualiza el cronómetro con el tiempo transcurrido.
@@ -174,13 +204,16 @@ class PongGame:
                 break
         turtle.done()
 
-    def __game_over(self):
-        self.__game_over_flag = True
-        self.__pen_score.clear()
-        self.__pen_score.goto(0, 0)
-        ganador = "Jugador A" if self.__marcadorA == 20 else "Jugador B"
-        self.__pen_score.write(f"Fin del juego\nGanador: {ganador}", align="center", font=("Courier", 25, "normal"))
-        self.__wn.update()
+    def __game_over(self): #Este método se llama cuando el juego llega a su fin
+        self.__game_over_flag = True #indica que el juego ha terminado.
+        self.__pen_score.clear() #borra cualquier contenido dibujado por ese objeto. En este caso, limpia el marcador en la pantalla.
+        self.__pen_score.goto(0, 0)  # Esto asegura que el siguiente texto se escriba desde la posición inicial.
+        ganador = "Jugador A" if self.__marcadorA == 20 else "Jugador B" #Determina quién es el ganador del juego
+        self.__pen_score.write(f"Fin del juego\nGanador: {ganador}", align="center", font=("Courier", 25, "normal")) #para escribir en la pantalla el mensaje "Fin del juego" seguido del nombre del ganador.
+        self.__wn.update() #actualizar la pantalla de Turtle después de mostrar el mensaje de fin de juego.
+
+    def __repr__(self): #Este método proporciona una representación imprimible de la instancia de la clase.
+        return f"PongGame(marcadorA={self.__marcadorA}, marcadorB={self.__marcadorB}, tiempo={self.__tiempo})" #Esta cadena incluye la puntuación del jugador A, la puntuación del jugador B y el tiempo transcurrido.
 
 if __name__ == "__main__":
     # Ejecuta el juego.
